@@ -1,0 +1,86 @@
+﻿@model SystemApp.Models.DataModels.ProductCategory
+@using SystemApp.Models.ViewModels;
+@inject ProductCategoryViewModel viewModel
+
+@{
+	ViewData["Title"] = "Edit";
+	Layout = "~/Views/Shared/_SalesLayout.cshtml";
+}
+@*@{ 
+	string controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+	string actionName = this.ViewContext.RouteData.Values["action"].ToString();
+}*@
+
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a></li>
+			<li class="breadcrumb-item"><a asp-controller="ProductCategory" asp-action="Index">Product Category</a></li>
+			<li class="breadcrumb-item active" aria-current="page">Edit</li>
+		</ol>
+	</nav>
+<div class="card">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-md-8">
+				<form asp-action="Edit">
+					<input type="hidden" asp-for="Id" />
+					<div class="form-group">
+						<label asp-for="@viewModel.CategoryName" class="control-label"></label>
+						<input asp-for="CategoryName" class="form-control" />
+						<span asp-validation-for="@viewModel.CategoryName" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="@viewModel.LowerCaseName" class="control-label"></label>
+						<input asp-for="LowerCaseName" class="form-control" readonly />
+					</div>
+					<div class="form-group">
+						<label asp-for="@viewModel.ShortNote" class="control-label"></label>
+						<textarea asp-for="ShortNote" class="form-control" placeholder="description" rows="5"></textarea>
+					</div>
+					<div class="form-group">
+						<label asp-for="@viewModel.OderPosition" class="control-label"></label>
+						<input asp-for="OderPosition" class="form-control" />
+					</div>
+					<div class="form-group form-check">
+						<label class="form-check-label">
+							@if (!Model.IsActive)
+							{
+								<input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => viewModel.IsActive)
+							}
+							else
+							{
+								<input class="form-check-input" asp-for="IsActive" /> @Html.DisplayName("Disable category")
+							}
+
+						</label>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-4">
+								<button class="btn text-black-50 btn-primary text-white" type="submit">
+									<i class="fas fa-save"></i> Save
+								</button>
+								<a asp-action="Index" class="btn btn-info text-white"><i class="fas fa-angle-double-left"></i> Back to List</a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-md-4">
+			@if(ViewBag.SuccessMessage != null)
+			{
+			<div class="text-success">
+				<div class="alert alert-success alert-dismissible">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<h5><strong>Success! <i class="fa fa-check-circle"></i> </strong> </h5>
+					@ViewBag.SuccessMessage
+				</div>
+			</div>
+			}
+
+		</div>
+		</div>
+	</div>
+</div>
+
+

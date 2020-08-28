@@ -1,0 +1,129 @@
+﻿@model IEnumerable<SystemApp.Models.DataModels.Product>
+
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_SalesLayout.cshtml";
+}
+
+<style>
+	.imgResized {
+		height: 50px;
+		width: 80px
+	}
+
+	.col-hover:hover {
+		box-shadow: 0,0,0,0;
+		zoom: 1;
+		border-color: #10125e
+	}
+</style>
+@{
+	int sno = 0;
+}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a></li>
+		<li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Product</a></li>
+		<li class="breadcrumb-item active" aria-current="page">New</li>
+	</ol>
+</nav>
+<div class="card">
+	<div class="card-body">
+		<table class="table table-responsive table-striped border table-bordered" style="font-size:14px; table-layout:fixed">
+			<thead>
+				<tr>
+					<td>
+						Sn.
+					</td>
+					<th>
+						Image
+					</th>
+					<th>
+						Name
+					</th>
+					<th>
+						Normalized
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.Price)
+					</th>
+					<th>
+						Product No.
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.ProductCode)
+					</th>
+					<th>
+						Category
+					</th>
+					<th>
+						Description
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.Delete)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.IsActive)
+					</th>
+					<th>
+						Date
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					var productImagePath = "~/images/product/uploads/" + item.ProductImagePath;
+				<tr>
+					<td>
+						@{ sno++; }
+						@sno
+					</td>
+					<td>
+						<a href="#">
+							<img src="@productImagePath" asp-append-version="true" class="card-img-top img-thumbnail imgResized rounded-circle" />
+						</a>
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ProductName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.LowerCaseName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Price)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ProductNumber)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ProductCode)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Category)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Description)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.Delete)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.IsActive)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.CreatedAt)
+					</td>
+					<td>
+						<a asp-action="Edit" asp-controller="Products" asp-route-id="@item.Id">Edit</a> |
+						<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+						<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+					</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+

@@ -1,0 +1,85 @@
+﻿@model IEnumerable<SystemApp.Models.DataModels.ProductCategory>
+
+@{
+	ViewData["Title"] = "InAactiveCategory";
+	Layout = "~/Views/Shared/_SalesLayout.cshtml";
+}
+
+@{
+	int sno = 0;
+}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a></li>
+		<li class="breadcrumb-item"><a asp-controller="ProductCategory" asp-action="Index">Product Category</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Disabled Lists</li>
+	</ol>
+</nav>
+@if (Model.Count() > 0)
+{
+	<div style=" width:100%">
+		<div class="card">
+			<div class="card-body">
+				<div class="d-flex">
+					<div class="position-relative mb-4">
+						<table class="table table-bordered" style="width:100%; table-layout:fixed">
+							<thead class="bg-light">
+								<tr>
+									<th scope="col" style="width:7%">SN.</th>
+									<th scope="col">Category name</th>
+									<th scope="col" style="font-size:13px; width:7%">Position</th>
+									<th scope="col">Description</th>
+									<th scope="col" style="font-size:13px; width:6%">Status</th>
+									<th scope="col" style="font-size:13px; width:6%">Deleted</th>
+									<th scope="col">Date created</th>
+									<th scope="col" class="text-center" style="font-size:13px; width:10%">
+
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model)
+								{
+
+									<tr>
+										<td>
+											@{ sno++; }
+											@sno
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.CategoryName)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.OderPosition)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.ShortNote)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.IsActive)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.Delete)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.CreatedAt)
+										</td>
+										<td class="text-center" style="font-size:12px">
+											<a asp-action="Edit" asp-route-id="@item.Id" title="Edit category"><i class="fas fa-external-link-alt"></i></a>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+else
+{
+	<div>
+		<h2 class="text-danger">No record created yet!</h2>
+	</div>
+}

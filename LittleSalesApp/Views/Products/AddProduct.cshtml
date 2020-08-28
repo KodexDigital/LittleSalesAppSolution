@@ -1,0 +1,104 @@
+﻿@model SystemApp.Models.ViewModels.ProductViewModel
+
+
+@{
+	ViewData["Title"] = "AddProduct";
+	Layout = "~/Views/Shared/_SalesLayout.cshtml";
+}
+
+@{ 
+	var customFile = "";
+}
+
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a></li>
+		<li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Product</a></li>
+		<li class="breadcrumb-item active" aria-current="page">New</li>
+	</ol>
+</nav>
+<div class="card">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-md-8">
+				<form asp-action="AddProduct" method="post" enctype="multipart/form-data">
+					<div class="rounded">
+						<div class="form-row form-group">
+							<div class="col">
+								<input asp-for="ProductName" class="form-control" placeholder="@Html.DisplayNameFor(n => n.ProductName)">
+								<span asp-validation-for="ProductName" class="text-danger"></span>
+							</div>
+							<div class="col">
+								<div class="input-group mb-2 mr-sm-2">
+									<div class="input-group-prepend">
+										<div class="input-group-text">Product number:</div>
+									</div>
+									<input asp-for="ProductNumber" class="form-control bg-white" readonly value="@ViewData["ProductNumber"].ToString()">
+								</div>
+							</div>
+
+						</div>
+						<div class="form-row form-group">
+							<div class="col">
+								<div class="input-group mb-2 mr-sm-2">
+									<div class="input-group-prepend">
+										<div class="input-group-text">Product code:</div>
+									</div>
+									<input asp-for="ProductCode" class="form-control bg-white" readonly value="@ViewData["ProductCode"].ToString()">
+								</div>
+							</div>
+							<div class="col">
+								<select asp-for="Category" class="form-control" asp-items="@ViewBag.CategoryId">
+									<option selected="selected" value="">Select a product category</option>
+								</select>
+								<span asp-validation-for="Category" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="form-row form-group">
+							<div class="col">
+								<div class="input-group mb-2 mr-sm-2">
+									<div class="input-group-prepend">
+										<div class="input-group-text">&#8358;</div>
+									</div>
+									<input asp-for="Price" class="form-control" placeholder="@Html.DisplayNameFor(n => n.Price)">
+								</div>
+								<span asp-validation-for="Price" class="text-danger"></span>
+							</div>
+							<div class="col">
+								<textarea asp-for="Description" class="form-control" rows="10" maxlength="500" placeholder="Now give a charming description of your product..."></textarea>
+								<span asp-validation-for="Description" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="form-row form-group">
+							<div class="col">
+								<div class="custom-file">
+									<input asp-for="FilePath" type="file" class="custom-file-input" id="@customFile" onchange="document.getElementById('image_upload_preview').src = window.URL.createObjectURL(this.files[0])">
+									<label asp-for="FilePath" class="custom-file-label" for="customFile">Upload your product</label>
+									<span asp-validation-for="FilePath" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-row form-group">
+							<div class="col">
+								<button type="submit" class="form-control btn btn-outline-primary"><i class="fa fa-paper-plane" aria-hidden="true"></i> Save</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-md-4">
+				<img src="@customFile" id="image_upload_preview" class="thumbnail mt-1" style="width:100%; border:none" />				
+				@if (ViewBag.SuccessMessage != null)
+				{
+					<div class="text-success">
+						<div class="alert alert-success alert-dismissible">
+							<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+							<h5><strong>Success! <i class="fa fa-check-circle"></i> </strong> </h5>
+							@ViewBag.SuccessMessage
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>

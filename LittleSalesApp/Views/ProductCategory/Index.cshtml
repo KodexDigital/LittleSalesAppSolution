@@ -1,0 +1,102 @@
+﻿@model IEnumerable<SystemApp.Models.DataModels.ProductCategory>
+
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_SalesLayout.cshtml";
+}
+@{
+	int sno = 0;
+}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a></li>
+		<li class="breadcrumb-item"><a asp-controller="ProductCategory" asp-action="Index">Product Category</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Category Lists</li>
+	</ol>
+</nav>
+@if (ViewBag.StatusMessage != null)
+{
+	<div class="text-success">
+		<div class="alert alert-success alert-dismissible">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<h5><strong>Success! <i class="fa fa-check-circle"></i> </strong> </h5>
+			@ViewBag.StatusMessage
+		</div>
+	</div>
+}
+@if (Model.Count() > 0)
+{
+	<div style=" width:100%">
+		<div class="card">
+			<div class="card-body">
+				<div class="d-flex">
+					<div class="position-relative mb-4">
+						<table class="table table-bordered" style="width:100%; table-layout:fixed">
+							<thead class="bg-light">
+								<tr>
+									<th scope="col" style="width:7%">SN.</th>
+									<th scope="col">Category name</th>
+									<th scope="col" style="font-size:13px; width:7%">Position</th>
+									<th scope="col">Description</th>
+									<th scope="col" style="font-size:13px; width:6%">Status</th>
+									<th scope="col" style="font-size:13px; width:6%">Deleted</th>
+									<th scope="col">Date created</th>
+									<th scope="col" class="text-center" style="font-size:13px; width:10%">
+										<a asp-action="addcategory" class="btn btn-outline-danger"><i class="fas fa-plus"></i> New</a>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model)
+								{
+
+									<tr>
+										<td>
+											@{ sno++; }
+											@sno
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.CategoryName)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.OderPosition)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.ShortNote)
+										</td>
+										<td>
+											@if (item.IsActive)
+											{<i class="fa fa-toggle-on text-info" title="Active"></i>}
+											else
+											{<i class="fas fa-toggle-off" title="In-Acive"></i>}
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.Delete)
+										</td>
+										<td>
+											@Html.DisplayFor(modelItem => item.CreatedAt)
+										</td>
+										<td class="text-center" style="font-size:12px">
+											<a asp-action="Edit" asp-route-id="@item.Id" title="Edit category"><i class="fas fa-external-link-alt"></i></a> |
+											<a asp-action="View" asp-route-id="@item.Id" title="View category"><i class="fa fa-eye"></i></a> |
+											<a asp-action="Delete" asp-route-id="@item.Id"
+											   onclick="return confirm('Are you sure you want to delete this reocrd?')" title="Delete category"><i class="fa fa-trash"></i></a>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+else
+{
+	<div>
+		<h2 class="text-danger">No record created yet!</h2>
+	</div>
+}
+
+

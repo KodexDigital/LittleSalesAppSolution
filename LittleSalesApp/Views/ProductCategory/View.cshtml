@@ -1,0 +1,101 @@
+﻿@model SystemApp.Models.DataModels.ProductCategory
+@using SystemApp.Models.ViewModels;
+@inject ProductCategoryViewModel viewModel
+
+@{
+	ViewData["Title"] = "View";
+	Layout = "~/Views/Shared/_SalesLayout.cshtml";
+}
+
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a></li>
+		<li class="breadcrumb-item"><a asp-controller="ProductCategory" asp-action="Index">Product Category</a></li>
+		<li class="breadcrumb-item active" aria-current="page">View</li>
+	</ol>
+</nav>
+<div class="card">
+	<div class="card-body">
+		<div>
+			<dl class="row">
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => viewModel.CategoryName)
+				</dt>
+				<dd class="col-sm-10">
+					<input asp-for="CategoryName" class="form-control" disabled />
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => viewModel.LowerCaseName)
+				</dt>
+				<dd class="col-sm-10">
+					<input asp-for="LowerCaseName" class="form-control" disabled/>
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => viewModel.ShortNote)
+				</dt>
+				<dd class="col-sm-10">
+					<textarea asp-for="ShortNote" class="form-control" rows="5" disabled></textarea>
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => viewModel.OderPosition)
+				</dt>
+				<dd class="col-sm-10">
+					<input asp-for="OderPosition" class="form-control" disabled/>
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => viewModel.IsActive)
+				</dt>
+				<dd class="col-sm-10">
+					<div class="form-group form-check">
+						<label class="form-check-label">
+							@if (Model.IsActive)
+							{
+								<input class="form-check-input" asp-for="IsActive" disabled /> @Html.DisplayName("Category is Active")
+							}
+							else
+							{
+								<input class="form-check-input" asp-for="IsActive" disabled /> @Html.DisplayName("Category not Active")
+							}
+						</label>
+					</div>
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => viewModel.Deleted)
+				</dt>
+				<dd class="col-sm-10">
+					<div class="form-group form-check">
+						<label class="form-check-label">
+							@if (Model.Delete)
+							{
+								<input class="form-check-input" asp-for="Delete" disabled /> @Html.DisplayName("YES")
+							}
+							else
+							{
+								<input class="form-check-input" asp-for="Delete" disabled /> @Html.DisplayName("NO")
+							}
+						</label>
+					</div>
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => viewModel.CreatedAt)
+				</dt>
+				<dd class="col-sm-10">
+					<input asp-for="CreatedAt" class="form-control" disabled />
+				</dd>
+			</dl>
+		</div>
+		<div>
+			<div class="row">
+				<div class="col-4">
+					<a asp-action="Edit" asp-route-id="@Model.Id" class="btn text-black-50 btn-primary text-white"> <i class="fas fa-external-link-alt"></i>Edit</a>
+					<a asp-action="Index" class="btn btn-info text-white"><i class="fas fa-angle-double-left"></i> Back to List</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
