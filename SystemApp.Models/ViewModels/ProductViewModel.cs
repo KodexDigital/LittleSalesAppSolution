@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using SystemApp.Models.DataModels;
+using SystemApp.Utilities;
 
 namespace SystemApp.Models.ViewModels
 {
@@ -18,10 +19,11 @@ namespace SystemApp.Models.ViewModels
 			product.LowerCaseName = LowerCaseName;
 			product.ProductNumber = ProductNumber;
 			product.ProductCode = ProductCode;
-			product.Category = Category;
+			product.CategoryId = CategoryId;
 			product.Description = Description;
 			product.Price = Price;
 			product.ProductImagePath = ProductImagePath;
+			product.ProductOwnerId = ProductOwnerId;
 		}
 
 		public Guid Id { get; set; }
@@ -41,7 +43,7 @@ namespace SystemApp.Models.ViewModels
 
 		[Required(ErrorMessage = "Select product category")]
 		[Display(Name = "Product category")]
-		public string Category { get; set; }
+		public Guid CategoryId { get; set; }
 
 		[Required(ErrorMessage = "Enter product description")]
 		[Display(Name = "Product description")]
@@ -64,7 +66,10 @@ namespace SystemApp.Models.ViewModels
 		public IFormFile FilePath { get; set; }
 
 		[Display(Name = "Created date")]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateFormat)]
 		public DateTime CreatedAt { get; set; }
+
+		public string ProductOwnerId { get; set; }
 
 	}
 }

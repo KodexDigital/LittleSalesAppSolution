@@ -17,7 +17,8 @@
 	<div class="card-body">
 		<div class="row">
 			<div class="col-md-8">
-				<form asp-action="AddProduct" method="post" enctype="multipart/form-data">
+				<form asp-action="Edit" method="post" enctype="multipart/form-data">
+					<input type="hidden" asp-for="Id" />
 					<div class="rounded">
 						<div class="form-row form-group">
 							<div class="col">
@@ -44,25 +45,42 @@
 								</div>
 							</div>
 							<div class="col">
-								<select asp-for="Category" class="form-control" asp-items="@ViewBag.CategoryId">
+								<select asp-for="CategoryId" class="form-control" asp-items="@ViewBag.CategoryId" disabled>
 									<option selected="selected" value="">Select a product category</option>
 								</select>
-								<span asp-validation-for="Category" class="text-danger"></span>
+								<span asp-validation-for="CategoryId" class="text-danger"></span>
 							</div>
 						</div>
 						<div class="form-row form-group">
 							<div class="col">
-								<input asp-for="Price" class="form-control">
+								<div class="input-group mb-2 mr-sm-2">
+									<div class="input-group-prepend">
+										<div class="input-group-text">&#8358;</div>
+									</div>
+									<input asp-for="Price" class="form-control" placeholder="@Html.DisplayNameFor(n => n.Price)">
+								</div>
 								<span asp-validation-for="Price" class="text-danger"></span>
+								<div style="margin-left:20px">
+									<label class="form-check-label">
+										<input class="form-check-input" asp-for="IsActive" />
+										<span>
+											Disable <strong>@Model.ProductName</strong>
+										</span>
+									</label>
+								</div>
 							</div>
 							<div class="col">
 								<textarea asp-for="Description" class="form-control" rows="10" maxlength="500"></textarea>
+								@*or this @Html.Raw(Model.Description)*@
 								<span asp-validation-for="Description" class="text-danger"></span>
 							</div>
 						</div>
 						<div class="form-row form-group">
-							<div class="col">
+							<div class="col-6">
 								<button type="submit" class="form-control btn btn-outline-primary"><i class="fa fa-paper-plane" aria-hidden="true"></i> Save</button>
+							</div>
+							<div class="col-6">
+								<a asp-action="Index" class="btn btn-info text-white form-control"><i class="fas fa-angle-double-left"></i> Back to List</a>
 							</div>
 						</div>
 					</div>

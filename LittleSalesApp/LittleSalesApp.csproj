@@ -16,22 +16,26 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.7" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\System.Repository\System.Repository.csproj" />
     <ProjectReference Include="..\SystemApp.Logics\SystemApp.Logics.csproj" />
+    <ProjectReference Include="..\SystemApp.Utilities\SystemApp.Utilities.csproj" />
     <ProjectReference Include="..\SystemSales.AccessLayer\SystemSales.AccessLayer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\AdminTemplate\" />
+    <Folder Include="wwwroot\images\profile\" />
     <Folder Include="wwwroot\images\product\uploads\" />
   </ItemGroup>
 

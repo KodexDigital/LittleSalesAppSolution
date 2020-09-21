@@ -4,14 +4,18 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"] - LittleSalesApp</title>
-
-	<environment include="Develoment">
+	<environment include="Development">
 		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="~/css/site.css" />
+		<link href="~/css/site.css" rel="stylesheet" />
+		<link href="~/font-awesome/css/all.css" rel="stylesheet" />
+		<link href="~/font-awesome/css/fontawesome.css" rel="stylesheet" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
 	</environment>
 	<environment include="Production">
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
-			  ntegrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" 
+		<link href="~/css/site.css" rel="stylesheet" />
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+			  ntegrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
 			  crossorigin="anonymous">
 
 	</environment>
@@ -35,16 +39,23 @@
 						</li>
 					</ul>
 				</div>
+				<ul class="navbar-nav flex-grow-2">
+					<li class="nav-item">
+						<a class="nav-link btn btn-outline-info border out" asp-area="" asp-controller="MyStore" asp-action="StoreAuth">Create Your Store</a>
+					</li>
+					<partial name="_LoginPartial" />
+				</ul>
+			
 			</div>
 		</nav>
 	</header>
-	<div class="container">
-		<main role="main" class="pb-3">
+	<div>
+		<main role="main" class="pb-3 mb-5"style="margin-bottom:100px">
 			@RenderBody()
 		</main>
 	</div>
 
-	<footer class="border-top footer text-muted">
+	<footer class="border-top footer text-muted" style="margin-top:-5em">
 		<div class="container">
 			&copy; 2020 - LittleSalesApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 		</div>
@@ -54,6 +65,8 @@
 		<script src="~/lib/jquery/dist/jquery.min.js"></script>
 		<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="~/js/site.js" asp-append-version="true"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 		@RenderSection("Scripts", required: false)
 	</environment>
 	<environment include="Production">

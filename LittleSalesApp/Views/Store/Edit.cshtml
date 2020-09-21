@@ -1,0 +1,77 @@
+﻿@model SystemApp.Models.ViewModels.SellerStoreViewModel
+
+@{
+	ViewData["Title"] = "Edit store";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div>
+	<div class="row form-row">
+		<div class="col-3"></div>
+		<div class="col-6">
+			<div class="card">
+				<div class="card-body">
+					<div class="text-center">
+						<h2>Edit your store here</h2>
+					</div>
+				</div>
+			</div>
+			@if (ViewBag.SuccessMessage != null)
+			{
+				<div class="text-success">
+					<div class="alert alert-success alert-dismissible">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<h5><strong>Success! <i class="fa fa-check-circle"></i> </strong> </h5>
+						@ViewBag.SuccessMessage
+					</div>
+				</div>
+			}
+			<div class="card">
+				<div class="card-body">
+					<div>
+						<form asp-action="Create" method="post" enctype="multipart/form-data">
+							<div class="form-group">
+								<label class="control-label">Name of store</label>
+								<input asp-for="NameOfStore" class="form-control" />
+								<span asp-validation-for="NameOfStore" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label">Store address</label>
+								<textarea asp-for="LocationAddress" class="form-control" rows="5"></textarea>
+								<span asp-validation-for="LocationAddress" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label class="control-label">Store company's name</label>
+								<input asp-for="CompanyName" class="form-control" />
+								<span asp-validation-for="CompanyName" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<div class="input-group mb-2 mr-sm-2">
+									<div class="input-group-prepend">
+										<div class="input-group-text">Store Link:</div>
+									</div>
+									<input asp-for="StoreUrl" class="form-control bg-white" readonly value="@ViewData["StoreUrl"].ToString()">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-6">
+									<button type="submit" class="form-control btn btn-primary"><i class="fa fa-paper-plane" aria-hidden="true"></i> Save</button>
+								</div>
+								<div class="col-6">
+									<a asp-action="Index" class="btn btn-info text-white form-control"><i class="fas fa-angle-double-left"></i> Back to home</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-3"></div>
+	</div>
+</div>
+
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

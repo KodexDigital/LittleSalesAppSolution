@@ -12,7 +12,7 @@ namespace SystemApp.Admin.Constants
 		public const string Numeric = "0123456789";
 		public static readonly Random random = new Random();
 		public const string Seperaotor = "_";
-		public static string DateFormat = DateTime.Now.ToString("MM/dd/yy hh:mm tt");
 		public static readonly string ProductImagePath = "images/product/uploads";
+		public static readonly string ProfileImagePath = "images/profile";
 	}
 }

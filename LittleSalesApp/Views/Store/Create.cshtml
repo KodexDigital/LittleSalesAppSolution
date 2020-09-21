@@ -1,0 +1,62 @@
+﻿@model SystemApp.Models.ViewModels.SellerStoreViewModel
+
+@{
+	ViewData["Title"] = "Create";
+	Layout = "~/Views/Shared/_SalesLayout.cshtml";
+}
+
+
+<div>
+	<div class="row form-row">
+		<div class="col-2"></div>
+		<div class="col-8">
+			<div class="card">
+				<div class="card-body">
+					<div class="text-center">
+						<h2>Create your store here</h2>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<div>
+						<form asp-action="Create" method="post" enctype="multipart/form-data">
+							<div class="form-group">
+								<label asp-for="NameOfStore" class="control-label"></label>
+								<input asp-for="NameOfStore" class="form-control" />
+								<span asp-validation-for="NameOfStore" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="LocationAddress" class="control-label"></label>
+								<textarea asp-for="LocationAddress" class="form-control" rows="5"></textarea>
+								<span asp-validation-for="LocationAddress" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="CompanyName" class="control-label"></label>
+								<input asp-for="CompanyName" class="form-control" />
+								<span asp-validation-for="CompanyName" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<div class="input-group mb-2 mr-sm-2">
+									<div class="input-group-prepend">
+										<div class="input-group-text">Store Link:</div>
+									</div>
+									<input asp-for="StoreUrl" class="form-control bg-white" readonly value="@ViewData["StoreUrl"].ToString()">
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="submit" value="Create now" class="btn btn-primary" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-2"></div>
+	</div>
+</div>
+
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

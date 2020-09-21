@@ -1,0 +1,126 @@
+﻿@model SystemApp.Models.DataModels.Product
+@using SystemApp.Models.ViewModels;
+@inject ProductViewModel viewModel
+
+@{
+	ViewData["Title"] = "View";
+	Layout = "~/Views/Shared/_SalesLayout.cshtml";
+	var productImagePath = "~/images/product/uploads/" + Model.ProductImagePath;
+}
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a></li>
+			<li class="breadcrumb-item"><a asp-controller="@ViewContext.RouteData.Values["controller"].ToString()" asp-action="Index">
+				 @ViewContext.RouteData.Values["controller"].ToString()</a></li>
+			<li class="breadcrumb-item active" aria-current="page">@ViewContext.RouteData.Values["action"].ToString()</li>
+		</ol>
+	</nav>
+	<div class="card">
+		<div class="card-body">
+			<div>
+				<dl class="row">
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => viewModel.ProductName)
+					</dt>
+					<dd class="col-sm-10">
+						<input asp-for="ProductName" class="form-control" disabled />
+					</dd>
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => viewModel.LowerCaseName)
+					</dt>
+					<dd class="col-sm-10">
+						<input asp-for="LowerCaseName" class="form-control" disabled />
+					</dd>
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => viewModel.ProductNumber)
+					</dt>
+					<dd class="col-sm-10">
+						<input asp-for="ProductNumber" class="form-control" disabled />
+					</dd>
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => viewModel.ProductCode)
+					</dt>
+					<dd class="col-sm-10">
+						<input asp-for="ProductCode" class="form-control" disabled />
+					</dd>
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => model.CategoryId)
+					</dt>
+					<dd class="col-sm-10">
+						<select asp-for="CategoryId" class="form-control" asp-items="@ViewBag.CategoryId" disabled>
+							<option selected="selected" value="">Select a product category</option>
+						</select>
+					</dd>
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => model.Description)
+					</dt>
+					<dd class="col-sm-10">
+						<textarea asp-for="Description" class="form-control" rows="10" disabled></textarea>
+					</dd>
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => model.Price)
+					</dt>
+					<dd class="col-sm-10">
+						<div class="input-group mb-2 mr-sm-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text">&#8358;</div>
+							</div>
+							<input asp-for="Price" class="form-control" placeholder="@Html.DisplayNameFor(n => n.Price)" disabled>
+						</div>
+					</dd>
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => viewModel.Delete)
+					</dt>
+					<dd class="col-sm-10">
+						<div class="form-group form-check">
+							<label class="form-check-label">
+								@if (Model.Delete)
+								{
+									<input class="form-check-input" asp-for="Delete" disabled /> @Html.DisplayName("YES")
+								}
+								else
+								{
+									<input class="form-check-input" asp-for="Delete" disabled /> @Html.DisplayName("NO")
+								}
+							</label>
+						</div>
+					</dd>
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => viewModel.IsActive)
+					</dt>
+					<dd class="col-sm-10">
+						<div class="form-group form-check">
+							<label class="form-check-label">
+								@if (Model.IsActive)
+								{
+									<input class="form-check-input" asp-for="IsActive" disabled /> @Html.DisplayName("Product is Active")
+								}
+								else
+								{
+									<input class="form-check-input" asp-for="IsActive" disabled /> @Html.DisplayName("Product not Active")
+								}
+							</label>
+						</div>
+					</dd>
+					<dt class="col-sm-2">
+						Product image
+					</dt>
+					<dd class="col-sm-10">
+						<img src="@productImagePath" asp-append-version="true" class="card-img-top" style="width:30%; height:auto" />
+					</dd>
+					<dt class="col-sm-2">
+						@Html.DisplayNameFor(model => viewModel.CreatedAt)
+					</dt>
+					<dd class="col-sm-10">
+						<input asp-for="CreatedAt" class="form-control" disabled />
+					</dd>
+				</dl>
+			</div>
+			<div>
+				<div class="col-4">
+					<a asp-action="Edit" asp-route-id="@Model.Id" class="btn text-black-50 btn-primary text-white"> <i class="fas fa-external-link-alt"></i>Edit</a>
+					<a asp-action="Index" class="btn btn-info text-white"><i class="fas fa-angle-double-left"></i> Back to List</a>
+				</div>
+			</div>
+		</div>
+	</div>

@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<SystemApp.Models.DataModels.Product>
+@using SystemSales.AccessLayer
+@inject ApplicationDbContext context;
 
 @{
 	ViewData["Title"] = "Index";
@@ -7,8 +9,8 @@
 
 <style>
 	.imgResized {
-		height: 50px;
-		width: 80px
+		height: 40px;
+		width: 40px
 	}
 
 	.col-hover:hover {
@@ -24,12 +26,12 @@
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a></li>
 		<li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Product</a></li>
-		<li class="breadcrumb-item active" aria-current="page">New</li>
+		<li class="breadcrumb-item active" aria-current="page">Product Lists</li>
 	</ol>
 </nav>
 <div class="card">
 	<div class="card-body">
-		<table class="table table-responsive table-striped border table-bordered" style="font-size:14px; table-layout:fixed">
+		<table class="table table-responsive table-striped border table-bordered" style="font-size:12px; table-layout:fixed">
 			<thead>
 				<tr>
 					<td>
@@ -51,7 +53,7 @@
 						Product No.
 					</th>
 					<th>
-						@Html.DisplayNameFor(model => model.ProductCode)
+						Product code
 					</th>
 					<th>
 						Category
@@ -60,67 +62,71 @@
 						Description
 					</th>
 					<th>
-						@Html.DisplayNameFor(model => model.Delete)
+						Deleted?
 					</th>
 					<th>
-						@Html.DisplayNameFor(model => model.IsActive)
+						Status
 					</th>
 					<th>
 						Date
 					</th>
-					<th></th>
+					<th>
+						<a asp-action="addproduct" class="btn btn-outline-danger" style="font-size:10px"><i class="fas fa-plus"></i> New</a>
+					</th>
 				</tr>
 			</thead>
 			<tbody>
 				@foreach (var item in Model)
 				{
 					var productImagePath = "~/images/product/uploads/" + item.ProductImagePath;
-				<tr>
-					<td>
-						@{ sno++; }
-						@sno
-					</td>
-					<td>
-						<a href="#">
-							<img src="@productImagePath" asp-append-version="true" class="card-img-top img-thumbnail imgResized rounded-circle" />
-						</a>
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.ProductName)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.LowerCaseName)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Price)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.ProductNumber)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.ProductCode)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Category)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Description)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.Delete)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.IsActive)
-					</td>
-					<td>
-						@Html.DisplayFor(modelItem => item.CreatedAt)
-					</td>
-					<td>
-						<a asp-action="Edit" asp-controller="Products" asp-route-id="@item.Id">Edit</a> |
-						<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-						<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-					</td>
-				</tr>
+					var categoryName = context.ProductCategories.FirstOrDefault(x => x.Id.Equals(item.CategoryId)).CategoryName;
+					<tr>
+						<td>
+							@{ sno++; }
+							@sno
+						</td>
+						<td>
+							<a href="#">
+								<img src="@productImagePath" asp-append-version="true" class="card-img-top img-thumbnail imgResized rounded-circle" />
+							</a>
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.ProductName)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.LowerCaseName)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Price)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.ProductNumber)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.ProductCode)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => categoryName)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Description)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.Delete)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.IsActive)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.CreatedAt)
+						</td>
+						<td style="font-size:10px">
+							<a asp-action="Edit" asp-route-id="@item.Id" title="Edit product"><i class="fas fa-external-link-alt"></i></a> |
+							<a asp-action="View" asp-route-id="@item.Id" title="View product"><i class="fa fa-eye"></i></a> |
+							<a asp-action="Delete" asp-route-id="@item.Id"
+							   onclick="return confirm('Are you sure you want to delete this reocrd?')" title="Delete Product"><i class="fa fa-trash"></i></a>
+						</td>
+					</tr>
 				}
 			</tbody>
 		</table>

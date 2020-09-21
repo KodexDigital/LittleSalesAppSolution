@@ -24,7 +24,7 @@ namespace System.Repository.Products
 
 			objFromDb.ProductName = product.ProductName;
 			objFromDb.LowerCaseName = product.ProductName.TrimStart().Replace(" ", "-").ToLower().TrimEnd();
-			objFromDb.Category = product.Category;
+			objFromDb.CategoryId = product.CategoryId;
 			objFromDb.Description = product.Description;
 			objFromDb.Price = product.Price;
 			objFromDb.IsActive = product.IsActive;
