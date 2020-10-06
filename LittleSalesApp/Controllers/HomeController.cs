@@ -14,6 +14,7 @@ using LittleSalesApp.Extensions;
 using SystemApp.Models.DataModels;
 using SystemSales.AccessLayer;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace LittleSalesApp.Controllers
 {
@@ -24,6 +25,9 @@ namespace LittleSalesApp.Controllers
 		private readonly ApplicationDbContext context;
 		List<Guid> sessionList = new List<Guid>();
 
+		[BindProperty]
+		public HomeViewModel homeViewModel { get; set; }
+
 		public HomeController(ILogger<HomeController> logger, IUnitOfWorks unitOfWorks, ApplicationDbContext context)
 		{
 			_logger = logger;
@@ -33,11 +37,26 @@ namespace LittleSalesApp.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			return View(await unitOfWorks.Products.GetAll());
+
+			var products = await unitOfWorks.Products.GetAll();
+			var mainMenu = await context.ProductCategories.Distinct().ToListAsync();
+			var homeVM = new HomeViewModel
+			{
+				ProductList = products,
+				CategoryList = mainMenu
+			};
+			return View(homeVM);
 		}
 		public IActionResult ProductDetails(Guid productId)
 		{
-			return View(unitOfWorks.Products.GetFirstOrDefault(filter: p => p.Id.Equals(productId)));
+			var singleProduct = unitOfWorks.Products.GetFirstOrDefault(filter: p => p.Id.Equals(productId));
+			var otherProduct = context.Products.Where(x => !x.Id.Equals(productId)).ToList();
+			var productLists = new ProductDetailsViewModel
+			{
+				ProductList = otherProduct,
+				SingleProduct = singleProduct
+			};
+			return View(productLists);
 		}
 
 		public IActionResult AddToCart(Guid productId)

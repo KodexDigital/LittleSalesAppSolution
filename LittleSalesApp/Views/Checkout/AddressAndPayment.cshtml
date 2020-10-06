@@ -1,0 +1,78 @@
+﻿@model SystemApp.Models.ViewModels.CartViewModel
+
+@{
+	ViewData["Title"] = "Chechout";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post">
+	<br />
+	<div class="container">
+		<div class="card">
+			<div class="card-header bg-success text-light ml-0">
+				<div class="col-12 d-none d-md-block col-md-6 pb-1">
+					<i class="fas fa-shopping-cart"></i> &nbsp; Checkout
+				</div>
+				<div class="col-12 col-md-4 offset-md-2 text-right">
+					<a asp-action="Index" asp-controller="Cart" asp-area="" class="btn btn-outline-info btn-sm">My basket <i class="fas fa-shopping-basket"></i></a>
+				</div>
+			</div>
+			<div class="card-body">
+				<div class="container rounded p-2">
+					<div class="row">
+						<div class="col-12 col-lg-5">
+							<h4 class="d-flex justify-content-between align-items-center mb-3">
+								<span class="text-primary">Items in basket</span>
+							</h4>
+							<ul class="list-group mb-3">
+								@{ var total = 0.0;}
+
+								@foreach (var details in Model.ProductServiceList)
+								{
+									var productPath = "~/images/product/uploads/" + details.ProductImagePath;
+									<li class="list-group-item d-flex justify-content-between">
+										<img src="@productPath" asp-append-version="true" class="rounded" style="width:50px; height:50px" />
+										<div>
+											<input type="hidden" asp-for="@details.Id" />
+											<h6 class="my-0">@details.ProductName</h6>
+											<small class="text-muted">Product number : @details.ProductNumber</small>
+										</div>
+										<span class="text-muted">&#8358;@(details.Price.ToString("#,##"))</span>
+										@{ total += (details.Price);}
+										<a asp-controller="Cart" asp-action="Remove" asp-route-prodcutId="@details.Id"><i class="fas fa-minus-circle" title="Remove this item"></i></a>
+									</li>
+								}
+
+								<li class="list-group-item d-flex justify-content-between bg-light text-danger">
+									<small>Total (NGN)</small>
+									<strong class="form-control text-center font-weight-bold text-danger" style="width:100px">&#8358;@total.ToString("#,##")</strong>
+								</li>
+							</ul>
+							<hr />
+							<div class="text-right">
+								<a asp-action="Index" asp-controller="Home" asp-area="" class="btn btn-success btn-lg"><i class="fas fa-shopping-cart"></i>  Checkout</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer">
+				<div class="col-12 col-md-6 offset-md-6 col-lg-4 offset-lg-8 text-right">
+					<button type="submit" class="btn btn-danger form-control rounded-pill">Place an order</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	@*@if (Model.ProductServiceList.Count > 0)
+		{
+
+		}
+		else
+		{
+			<div class="alert alert-info p-5 container">
+				No items added to the shopping cart...
+				<a asp-action="Index" asp-controller="Home" asp-area="" class="btn btn-danger btn-sm"><i class="fas fa-arrow-circle-left"></i>  Shop now</a>
+			</div>
+		}*@
+</form>
+

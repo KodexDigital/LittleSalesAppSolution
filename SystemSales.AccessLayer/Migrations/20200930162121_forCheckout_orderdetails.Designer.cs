@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SystemSales.AccessLayer;
 
 namespace SystemSales.AccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200930162121_forCheckout_orderdetails")]
+    partial class forCheckout_orderdetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,6 +258,9 @@ namespace SystemSales.AccessLayer.Migrations
                     b.Property<Guid>("OrderHeaderId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
                     b.Property<Guid>("ProductServiceId")
                         .HasColumnType("uniqueidentifier");
 
@@ -265,9 +270,6 @@ namespace SystemSales.AccessLayer.Migrations
                     b.Property<string>("ServiceName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("UnitPrice")
-                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -309,18 +311,12 @@ namespace SystemSales.AccessLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("HasBeenShipped")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymentTransactionId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -331,9 +327,6 @@ namespace SystemSales.AccessLayer.Migrations
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ZipCode")
                         .IsRequired()
@@ -582,7 +575,7 @@ namespace SystemSales.AccessLayer.Migrations
                         .HasForeignKey("CustomerId");
 
                     b.HasOne("SystemApp.Models.DataModels.OrderHeader", "OrderHeader")
-                        .WithMany("OrderDetails")
+                        .WithMany()
                         .HasForeignKey("OrderHeaderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

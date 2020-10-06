@@ -4,43 +4,33 @@ using System.Linq;
 using System.Repository.Admin;
 using System.Threading.Tasks;
 using LittleSalesApp.Extensions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SystemApp.Logics.BusinessLogics;
-using SystemApp.Logics.Helpers;
-using SystemApp.Models.Carts;
 using SystemApp.Models.DataModels;
 using SystemApp.Models.ViewModels;
 using SystemApp.Utilities;
-using SystemSales.AccessLayer;
 
 namespace LittleSalesApp.Controllers
 {
-
-    public class CartController : Controller
+    public class CartController1 : Controller
     {
-        private readonly ApplicationDbContext context;
         private readonly IUnitOfWorks unitOfWorks;
-        private readonly UserManager<ApplicationUser> userManager;
         List<Guid> sessionList = new List<Guid>();
 
         [BindProperty]
         public CartViewModel CartViewModel { get; set; }
 
-        public CartController(ApplicationDbContext context, IUnitOfWorks unitOfWorks, UserManager<ApplicationUser> userManager)
+        public CartController1(IUnitOfWorks unitOfWorks)
         {
-            this.context = context;
             this.unitOfWorks = unitOfWorks;
-            this.userManager = userManager;
             CartViewModel = new CartViewModel
             {
                 ProductServiceList = new List<Product>(),
                 OrderHeader = new OrderHeader()
             };
+
         }
 
-        public IActionResult Index()
+        public IActionResult Summary()
         {
             if (HttpContext.Session.GetObject<List<Guid>>(StandardVariables.SessionCart) != null)
             {
@@ -53,44 +43,11 @@ namespace LittleSalesApp.Controllers
             return View(CartViewModel);
         }
 
-        public IActionResult Buy(Guid prodcutId)
-        {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(StandardVariables.SessionCart)))
-            {
-                sessionList.Add(prodcutId);
-                HttpContext.Session.SetObject(StandardVariables.SessionCart, sessionList);
-            }
-            else
-            {
-                sessionList = HttpContext.Session.GetObject<List<Guid>>(StandardVariables.SessionCart);
-                if (!sessionList.Contains(prodcutId))
-                {
-                    sessionList.Add(prodcutId);
-                    HttpContext.Session.SetObject(StandardVariables.SessionCart, sessionList);
-                }
-            }
-
-            return RedirectToAction(nameof(Index),"Home");
-            //return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult Remove(Guid prodcutId)
-        {
-            sessionList = HttpContext.Session.GetObject<List<Guid>>(StandardVariables.SessionCart);
-            sessionList.Remove(prodcutId);
-            HttpContext.Session.SetObject(StandardVariables.SessionCart, sessionList);
-
-            return RedirectToAction(nameof(Index));
-        }
-
-
         [HttpPost]
-        [ActionName(nameof(Index))]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PlaceOrder()
+        [ActionName("Summary")]
+        public IActionResult SummaryPOST()
         {
-            var appUser = await userManager.GetUserAsync(HttpContext.User);
-
             if (HttpContext.Session.GetObject<List<Guid>>(StandardVariables.SessionCart) != null)
             {
                 sessionList = HttpContext.Session.GetObject<List<Guid>>(StandardVariables.SessionCart);
@@ -110,9 +67,8 @@ namespace LittleSalesApp.Controllers
                 CartViewModel.OrderHeader.OrderDate = DateTime.Now;
                 CartViewModel.OrderHeader.Status = StandardVariables.StatusSubmitted;
                 CartViewModel.OrderHeader.ProductServiceCount = CartViewModel.ProductServiceList.Count;
-                CartViewModel.OrderHeader.Total = CartViewModel.TotalCost;
-                await unitOfWorks.OrderHeader.Add(CartViewModel.OrderHeader);
-                await unitOfWorks.Save();
+                unitOfWorks.OrderHeader.Add(CartViewModel.OrderHeader);
+                unitOfWorks.Save();
 
                 foreach (var item in CartViewModel.ProductServiceList)
                 {
@@ -121,15 +77,13 @@ namespace LittleSalesApp.Controllers
                         ProductServiceId = item.Id,
                         OrderHeaderId = CartViewModel.OrderHeader.Id,
                         ServiceName = item.ProductName,
-                        UnitPrice = item.Price,
-                        Quantity = CartViewModel.OrderDetails.Quantity,
-                        CustomerId = appUser.Id ?? null
+                        UnitPrice = item.Price
                     };
 
-                    await unitOfWorks.OrderDetails.Add(orderDetails);
+                    unitOfWorks.OrderDetails.Add(orderDetails);
 
                 }
-                await unitOfWorks.Save();
+                unitOfWorks.Save();
                 HttpContext.Session.SetObject(StandardVariables.SessionCart, new List<Guid>());
                 return RedirectToAction("OrderConfirmation", "Cart", new { id = CartViewModel.OrderHeader.Id });
             }
@@ -141,19 +95,13 @@ namespace LittleSalesApp.Controllers
         }
 
 
-
-
-        #region Check existing item in cart
-        private int IsItemExist(Guid id)
+        public IActionResult Remove(Guid productServiceId)
         {
-            List<CartItems> CartItems = SessionHelper.GetObjectFromJson<List<CartItems>>(HttpContext.Session, StandardVariables.SessionCart);
-            for(int c = 0; c < CartItems.Count; c++)
-            {
-                if (CartItems[c].ProductServiceList.FirstOrDefault().Id.Equals(id))
-                    return 1;
-            }
-            return -1;
+            sessionList = HttpContext.Session.GetObject<List<Guid>>(StandardVariables.SessionCart);
+            sessionList.Remove(productServiceId);
+            HttpContext.Session.SetObject(StandardVariables.SessionCart, sessionList);
+
+            return RedirectToAction(nameof(Index));
         }
-        #endregion
     }
 }

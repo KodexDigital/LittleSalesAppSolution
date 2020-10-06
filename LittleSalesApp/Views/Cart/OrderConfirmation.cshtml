@@ -1,0 +1,35 @@
+﻿@model int
+@{
+	ViewData["Title"] = "OrderConfirmation";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+	<div class="col-md-4">
+
+	</div>
+	<div class="col-md-4">
+		<div class="col-12 text-center">
+			<h1 class="text-primary text-center">Order Request Submitted</h1><br />
+			<div class="login-form-icon">
+				<i class="fas fa-check-square fa-9x text-success"></i>
+			</div>
+
+		</div>
+		<div class="col-12 text-center h4" style="color:maroon">
+			<br />
+			Thank you for submitting a request online! <br />
+			We have received your request and our team will be in touch with you shortly!
+			<br />
+			Your Request Number is : @Model
+		</div>
+		<hr />
+		<div class="col-12 text-center">
+			<a asp-action="Index" asp-controller="Home" asp-area="" class="btn btn-danger btn-sm"><i class="fas fa-arrow-circle-left"></i>  Continue shopping</a>
+		</div>
+	</div>
+	<div class="col-md-4">
+
+	</div>
+</div>
+

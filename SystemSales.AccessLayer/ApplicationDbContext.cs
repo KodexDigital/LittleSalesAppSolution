@@ -33,6 +33,7 @@ namespace SystemSales.AccessLayer
 		public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 		public DbSet<IdentityUserClaim<string>> IdentityUserClaims { get; set; }
 		public DbSet<SellerStore> SellerStores { get; set; }
+		public DbSet<Checkout> Checkouts { get; set; }
 
 	}
 }

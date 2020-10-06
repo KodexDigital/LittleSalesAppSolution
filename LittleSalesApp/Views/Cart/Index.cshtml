@@ -1,6 +1,7 @@
 ﻿@model SystemApp.Models.ViewModels.CartViewModel
 
 @{
+	ViewData["Title"] = "My basket";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,57 +9,231 @@
 	@if (Model.ProductServiceList.Count > 0)
 	{
 		<br />
-		<div class="backgroundWhite container">
+		<div class="container">
 			<div class="card">
-				<div class="card-header bg-dark text-light ml-0 row container">
+				<div class="card-header bg-dark text-light ml-0">
 					<div class="col-12 d-none d-md-block col-md-6 pb-1">
-						<i class="fas fa-shopping-cart"></i> &nbsp; Shopping Cart
+						<i class="fas fa-shopping-basket"></i> &nbsp; Cart Summery (<span class="font-weight-bold h5">@Model.ProductServiceList.Count()</span>)
 					</div>
 					<div class="col-12 col-md-4 offset-md-2 text-right">
-						<a asp-action="Index" asp-controller="Home" asp-area="Customer" class="btn btn-outline-info form-control btn-sm">Shopping Cart</a>
+						<a asp-action="Index" asp-controller="Home" asp-area="" class="btn btn-outline-info form-control btn-sm">Continue shopping</a>
 					</div>
 				</div>
 				<div class="card-body">
-					@{
-						var orderTotal = 0.0;
-					}
+					<div class="rounded p-2">
+						<div>
+							<!-- Nav pills -->
+							<ul class="nav nav-pills h4" role="tablist">
+								<li class="nav-item border">
+									<a class="nav-link active" data-toggle="pill" href="#ItemsInBasket"><i class="fas fa-shopping-basket"></i> Items in basket <span style="font-size:18px">&raquo;&raquo;</span> </a>
+								</li>
+								<li class="nav-item border">
+									<a class="nav-link" data-toggle="pill" href="#ShippingAddress"><i class="fas fa-location-arrow"></i> Shipping address <span style="font-size:18px">&raquo;&raquo;</span></a>
+								</li>
+								<li class="nav-item border">
+									<a class="nav-link" data-toggle="pill" href="#PaymentMethod"><i class="fas fa-money-bill-wave"></i> Payment <span style="font-size:18px">&raquo;&raquo;</span></a>
+								</li>
+								<li class="nav-item border">
+									<a class="nav-link" data-toggle="pill" href="#OrderConfirmation"><i class="fas fa-thumbs-up"></i> Confirm Order <span style="font-size:18px">&raquo;&raquo;</span></a>
+								</li>
+							</ul>
+							<!-- Tab panes -->
+							<div class="tab-content">
+								<div id="ItemsInBasket" class="tab-pane active">
+									<h4 class="d-flex justify-content-between align-items-center mb-3">
+										<span class="text-primary">Items in basket</span>
+									</h4>
+									<ul class="list-group mb-3">
+										@{ var total = 0.0;}
 
-					@foreach (var item in Model.ProductServiceList)
-					{
-						var productImagePath = "~/images/product/uploads/" +  item.ProductImagePath;
-						orderTotal += (item.Price);
-						<div class="row">
-							<div class="d-none d-md-block col-md-2 text-center py-2">
-								<img src="@productImagePath" asp-append-version="true" class="card-img-top rounded" style="width:100%; height:auto" />
-							</div>
-							<div class="col-12 col-md-5 text-md-left pt-3">
-								<h5><strong class="text-primary">@item.ProductName</strong></h5>
-								<h5 class="text-secondary">$@item.Price per product</h5>
-								<h5 class="text-secondary"><small>@item.ProductNumber</small></h5>
-							</div>
-							<div class="col-12 col-md-5 row pt-3">
-								<div class="col-6 text-md-right" style="padding-top:5px;">
-									<h6><strong class="text-danger">@((item.Price.ToString("c")))</strong></h6>
-								</div>
-								<div class="col-6 text-right">
-									<button type="submit" class="btn btn-outline-danger" asp-action="remove" asp-route-serviceId="@item.Id">
-										<i class="fas fa-trash"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-						<hr />
-					}
+										@foreach (var details in Model.ProductServiceList)
+										{
+											var productPath = "~/images/product/uploads/" + details.ProductImagePath;
+											<li class="list-group-item d-flex justify-content-between">
+												<img src="@productPath" asp-append-version="true" class="rounded" style="width:50px; height:50px" />
+												<div>
+													<input type="hidden" asp-for="@details.Id" />
+													<h6 class="my-0">@details.ProductName</h6>
+													<small class="text-muted">Product number : @details.ProductNumber</small>
+												</div>
+												<input asp-for="OrderDetails.Quantity" value="1" class="input-sm" />
+												<span class="text-muted">&#8358;@(details.Price.ToString("#,##"))</span>
+												@{ total += (details.Price);}
+												<a asp-controller="Cart" asp-action="Remove" asp-route-prodcutId="@details.Id"><i class="fas fa-minus-circle" title="Remove this item"></i></a>
+											</li>
+													}
 
-					<div class="row">
-						<div class="col-12 text-right pr-4">
-							<p class="text-success h5">Total (NGN): &nbsp;&nbsp; &#8358;@orderTotal</p>
+										<li class="list-group-item d-flex justify-content-between bg-light text-danger">
+											<small>Total (NGN)</small>
+											<strong class="form-control text-center font-weight-bold text-danger" style="width:100px">&#8358;@total.ToString("#,##")</strong>
+										</li>
+									</ul>
+								</div>
+								<div id="ShippingAddress" class="tab-pane fade">
+									<div class="row">
+										<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+										<div class="col-md-12">
+											<h4 class="d-flex justify-content-between align-items-center mb-3">
+												<span class="text-primary">Pick up details:</span>
+											</h4>
+											<div class="row my-1">
+												<div class="col-2">
+													<label>Name</label>
+												</div>
+												<div class="col-10">
+													<input asp-for="OrderHeader.Name" id="txtName" type="text" class="form-control" />
+													<span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+												</div>
+											</div>
+											<div class="row my-1">
+												<div class="col-2">
+													<label>Phone</label>
+												</div>
+												<div class="col-10">
+													<input asp-for="OrderHeader.Phone" id="txtPhone" type="text" class="form-control" />
+													<span asp-validation-for="OrderHeader.Phone" class="text-danger"></span>
+												</div>
+											</div>
+											<div class="row my-1">
+												<div class="col-2">
+													<label>Address</label>
+												</div>
+												<div class="col-10">
+													<input asp-for="OrderHeader.Address" type="text" class="form-control" />
+													<span asp-validation-for="OrderHeader.Address" class="text-danger"></span>
+												</div>
+											</div>
+											<div class="row my-1">
+												<div class="col-2">
+													<label>City</label>
+												</div>
+												<div class="col-10">
+													<input asp-for="OrderHeader.City" type="text" class="form-control" />
+													<span asp-validation-for="OrderHeader.City" class="text-danger"></span>
+												</div>
+											</div>
+											<div class="row my-1">
+												<div class="col-2">
+													<label>Zip Code</label>
+												</div>
+												<div class="col-10">
+													<input asp-for="OrderHeader.ZipCode" type="text" class="form-control" />
+													<span asp-validation-for="OrderHeader.ZipCode" class="text-danger"></span>
+												</div>
+											</div>
+											<div class="row my-1">
+												<div class="col-2">
+													<label>Email</label>
+												</div>
+												<div class="col-10">
+													<input asp-for="OrderHeader.Email" type="text" class="form-control" />
+													<span asp-validation-for="OrderHeader.Email" class="text-danger"></span>
+												</div>
+											</div>
+											<div class="row my-1">
+												<div class="col-2">
+													<label>Order comment</label>
+												</div>
+												<div class="col-10">
+													<textarea asp-for="OrderHeader.Comments" type="text" class="form-control" rows="3"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="PaymentMethod" class="tab-pane fade">
+									<h3>Payment method</h3>
+									<p>Choice of payment</p>
+									<hr />
+
+								</div>
+								<div id="OrderConfirmation" class="tab-pane fade">
+									@{int sn = 0;}
+									<div class="row">
+										<div class="col-6">
+											<h3>Order Confirmation</h3>
+										</div>
+										<div class="col-6 text-right">
+											<h3>@DateTime.Now</h3>
+										</div>
+									</div>
+									<table class="table table-striped">
+										<thead class="bg-dark text-white h5">
+											<tr>
+												<td>#</td>
+												<td>Item name</td>
+												<td>Unit Price</td>
+												<td>Quantiy</td>
+												<td>Total amount</td>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>@{sn++;} @sn</td>
+												<td>@Html.DisplayFor(model => model.ProductServiceList.FirstOrDefault().ProductName)</td>
+												<td>@Model.ProductServiceList.FirstOrDefault().Price.ToString("#,##")</td>
+												<td>1</td>
+												<td>0</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="mt-3" style="float:right; position:relative">
+										<div class="card-deck" style="width:500px">
+											<div class="card-body">
+												<div class="card-header">
+													<h3 class="card-title">Your Order Summary</h3>
+												</div>
+												<table class="table table-striped">
+													<thead class="bg-info text-white h6 font-weight-bold">
+														<tr>
+															<td>Items</td>
+															<td>Subtotal (&#8358;)</td>
+														</tr>
+													</thead>
+													<tbody>
+														@foreach (var product in Model.ProductServiceList)
+														{
+															<tr>
+																<td>@Html.DisplayFor(model => product.ProductName)</td>
+																<td>@product.Price.ToString("#,##")</td>
+															</tr>
+
+														}
+														<tr>
+															<td class="font-weight-bold">SubTotal:</td>
+															<td class="font-weight-bold">@Model.ProductServiceList.Sum(x => x.Price).ToString("#,##")</td>
+														</tr>
+														<tr>
+															<td class="font-weight-bold">Shipping charges:</td>
+															<td class="font-weight-bold">200</td>
+														</tr>
+														<tr>
+															<td class="font-weight-bold">Grand Total:</td>
+															<td class="font-weight-bold">
+																&#8358;@Model.ProductServiceList.Sum(p => p.Price + (200 / Model.ProductServiceList.Count())).ToString("#,##")
+															</td>
+														</tr>
+													</tbody>
+												</table>
+												<div>
+													<a asp-action="" asp-controller="Checkout" asp-area="" class="btn btn-success btn-lg"><i class="fas fa-shopping-cart"></i>  Checkout</a>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="card-footer">
-					<div class="col-12 col-md-6 offset-md-6 col-lg-4 offset-lg-8 text-right">
-						<a asp-action="Summary" asp-area="" asp-controller="Cart" class="btn btn-success form-control">Summary</a>
+					<div>
+						<span>Supported by: </span>
+						<span>
+							@(await Component.InvokeAsync("CheckoutPaymentSupport"))
+						</span>
+						@*<button type="submit" class="btn btn-danger form-control rounded-pill">Place an order</button>*@
 					</div>
 				</div>
 			</div>
@@ -66,6 +241,11 @@
 	}
 	else
 	{
-		<div class="backgroundWhite"> No items added to the shopping cart...</div>
+		<div class="alert alert-info p-5 container">
+			No items added to the shopping cart...
+			<a asp-action="Index" asp-controller="Home" asp-area="" class="btn btn-danger btn-sm"><i class="fas fa-arrow-circle-left"></i>  Shop now</a>
+		</div>
 	}
 </form>
+
+<br />

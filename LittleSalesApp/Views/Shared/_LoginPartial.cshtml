@@ -4,30 +4,30 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-	<ul class="navbar-nav">
-		@if (SignInManager.IsSignedIn(User))
-		{
-			<li class="nav-item p-1">
-				<a id="manage" class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Manage" title="Manage account">Hello @UserManager.GetUserName(User)!</a>
-			</li>
-			<li class="nav-item p-1">
-				<form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-					@if (User?.Identity?.IsAuthenticated ?? false)
-					{
+<ul class="navbar-nav">
+	@if (SignInManager.IsSignedIn(User))
+	{
+		<li class="nav-item p-1">
+			<a id="manage" class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Manage" title="Manage account">Hello @UserManager.GetUserName(User)!</a>
+		</li>
+		<li class="nav-item p-1">
+			<form id="logoutForm" class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+				@if (User?.Identity?.IsAuthenticated ?? false)
+				{
 					<button id="logout" type="submit" class="nav-link btn" title="Sign Out"><i class="fas fa-sign-out-alt text-danger"></i></button>
-					}
-				</form>
-			</li>
+				}
+			</form>
+		</li>
 
-		}
-		else
-		{
-			<li class="p-1">
-				<a asp-controller="Account" asp-action="Login" title="Sign In"><i class="fas fa-sign-in-alt text-info"></i></a>
-			</li>
-			<li class="p-1">
-				<a asp-controller="Account" asp-action="Register" title="Sign Up"><i class="fas fa-user-plus text-primary"></i></a>
-			</li>
-		}
+	}
+	else
+	{
+		<li class="nav-item ml-1 mr-1">
+			<a class="nav-link btn btn-primary text-white font-weight-bold" asp-area="" asp-controller="Account" asp-action="Login" title="Sign In">Sign In <i class="fas fa-sign-in-alt text-dark"></i></a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link btn btn-danger text-white font-weight-bold" asp-area="" asp-controller="Account" asp-action="Register" title="Sign Up">Sign Up <i class="fas fa-user-plus text-dark"></i></a>
+		</li>
+	}
 
-	</ul>
+</ul>

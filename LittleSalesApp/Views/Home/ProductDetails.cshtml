@@ -1,75 +1,129 @@
-﻿@model SystemApp.Models.DataModels.Product
+﻿@model SystemApp.Models.ViewModels.ProductDetailsViewModel
+@using SystemSales.AccessLayer
 @using SystemApp.Utilities
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
+@inject ApplicationDbContext context;
 @using LittleSalesApp.Extensions
 
 @{
-	ViewData["Title"] = "Details";
+	ViewData["Title"] = Model.SingleProduct.ProductName;
 	Layout = "~/Views/Shared/_Layout.cshtml";
-	var productImagePath = "~/images/product/uploads/" + Model.ProductImagePath;
+	var productImagePath = "~/images/product/uploads/" + Model.SingleProduct.ProductImagePath;
 }
 
 <div class="container">
-	<div class="card">
-		@*<div class="card-header bg-light text-light row">
+	<div class="card-title">
+		@{
+			var categoryName = context.ProductCategories.FirstOrDefault(x => x.Id.Equals(Model.SingleProduct.CategoryId)).CategoryName;
+			var userPhoneNumber = context.ApplicationUsers.FirstOrDefault(u => u.Id.Equals(Model.SingleProduct.ProductOwnerId))?.PhoneNumber ?? "07037511548";
+		}
+
+		<div class="row">
 			<div class="col-md-6">
-				<h1 class="text-primary text-capitalize">@Model.ProductName</h1>
+				<h3>@categoryName</h3>
 			</div>
-			<div class="col-md-6 text-md-right">
-				<h1 class="text-muted">Price : @((Model.Price).ToString("c"))</h1>
+			<div class="col-md-6 text-right">
 			</div>
-		</div>*@
+		</div>
+	</div>
+	<div class="card">
 		<div class="card-body">
-			<div class="container rounded p-2">
+			<div class="rounded p-2">
 				<div class="row">
+					<div class="col-md-4">
+						<img src="@productImagePath" asp-append-version="true" class="card-img-top rounded" style="width:100%; height:auto" />
+					</div>
 					<div class="col-md-8">
+						<h2 class="text-capitalize">@Model.SingleProduct.ProductName</h2>
+						<h5 class="text-gray">Product number: @Model.SingleProduct.ProductNumber</h5>
+						<h5 class="text-gray">Product code: @Model.SingleProduct.ProductCode</h5>
+						<h5 class="text-gray">Brand: </h5>
+						<hr />
+						<h3 class="text-dark"><strong>&#8358;@Model.SingleProduct.Price.ToString("#,###.##")</strong></h3>
+						<hr />
+						<h5 class="text-gray">
+							@*<span>Quantity: <input type="number" value="0" /> </span>*@
+							<span>Contact us for bulk purchase: @userPhoneNumber</span>
+						</h5>
+						<hr />
 						<div class="row">
-							<div class="col-12">
-								<h3 class="text-success">Price per Service: $@Model.Price</h3>
-								<h4 class="text-muted">@Model.ProductNumber</h4>
-								<p class="text-secondary">@Html.Raw(Model.Description)</p>
+							<div class="col-sm-6">
+								@{
+									var AddToCartEnabled = true;
+									if (HttpContextAccessor.HttpContext.Session.GetObject<List<Guid>>(StandardVariables.SessionCart) != null)
+									{
+										var sessionList = HttpContextAccessor.HttpContext.Session.GetObject<List<Guid>>(StandardVariables.SessionCart);
+										if (sessionList.Contains(Model.SingleProduct.Id))
+										{
+											AddToCartEnabled = false;
+										}
+									}
+								}
+
+								@if (AddToCartEnabled)
+								{
+									<a asp-action="Buy" asp-controller="Cart" asp-route-prodcutId="@Model.SingleProduct.Id" class="btn btn-success form-control fa-10x rounded-pill font-weight-bold">Buy now <i class="fas fa-shopping-basket"></i></a>
+								}
+								else
+								{
+									@*<button class="btn btn-primary btn-square form-control fa-10x rounded-pill font-weight-bold text-danger" disabled></button>*@
+									<a asp-controller="Cart" asp-action="Index" class="btn btn-success form-control fa-10x rounded-pill font-weight-bold text-danger">Item in Cart | Checkout <i class="fas fa-shopping-basket"></i></a>
+								}
+
+							</div>
+							<div class="col-sm-6">
+								<a asp-action="Index" class="btn btn-info form-control rounded-pill font-weight-bold">Back to products <i class="fas fa-home"></i></a>
 							</div>
 						</div>
 					</div>
-					@*<div class="col-md-4 text-center">
-						<img src="@productImagePath" asp-append-version="true" class="card-img-top rounded" style="width:100%; height:auto" />
-					</div>*@
-
+					<div class="p-5">
+						<h3 class="font-weight-bold">Description:</h3>
+						<p class="text-secondary h4">@Html.Raw(Model.SingleProduct.Description)</p>
+					</div>
 				</div>
 
 			</div>
 		</div>
-		<div class="card-footer">
-			<div class="row">
-				<div class="col-12 col-md-6 pb-1">
-					<a asp-action="Index" class="btn btn-success form-control  btn-square btn-lg" style="height:50px;">Back to List</a>
-				</div>
-				<div class="col-12 col-md-6 pb-1">
-					@{
-						var AddToCartEnabled = true;
+	</div>
 
-						if (HttpContextAccessor.HttpContext.Session.GetObject<List<Guid>>(StandardVariables.SessionCart) != null)
+
+	<div class="mt-5 mb-5 rounded-pill">
+		<div class="card">
+			<div class="card-body">
+				<div class="card-header bg-danger text-white mb-2"><h3>Other products:</h3></div>
+				<div class="card-deck row no-gutters">
+					@if (Model.ProductList.Any())
+					{
+
+						@foreach (var item in Model.ProductList)
 						{
-							var sessionList = HttpContextAccessor.HttpContext.Session.GetObject<List<Guid>>(StandardVariables.SessionCart);
-							if (sessionList.Contains(Model.Id))
-							{
-								AddToCartEnabled = false;
-							}
+							var othersProductImagePath = "~/images/product/uploads/" + item.ProductImagePath;
+							<input type="hidden" asp-for="@item.Id" />
+							<div class="card" style="margin-left:10px; max-width:18em">
+								<div class="card-body">
+									<div class="card-title">
+										<span class="text-danger float-right"><strong>&#8358;@item.Price.ToString("#,###")</strong></span>
+									</div>
+									<img src="@othersProductImagePath" asp-append-version="true" class="card-img-top img-fluid rounded" style="width:100%; height:100%" />
+								</div>
+								<div class="card-footer bg-white">
+									<h6 class="text-capitalize">@item.ProductName</h6>
+									<div class="row">
+										<div class="col-md-6">
+											<a asp-action="Buy" asp-controller="Cart" asp-route-prodcutId="@item.Id" class="btn btn-danger form-control"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy</a>
+										</div>
+										<div class="col-md-6">
+											<a asp-action="ProductDetails" asp-route-productId="@item.Id" class="btn btn-info form-control"><i class="fa fa-eye" aria-hidden="true"></i> Details</a>
+										</div>
+									</div>
+								</div>
+							</div>
 						}
 					}
-
-					@if (AddToCartEnabled)
-					{
-						<a asp-action="AddToCart" asp-route-serviceId="@Model.Id" class="btn btn-primary btn-square form-control btn-lg" style="height:50px;">Add to Cart</a>
-					}
-					else
-					{
-						<button class="btn btn-primary btn-square form-control btn-lg" style="height:50px;" disabled>Item in Cart</button>
-					}
-
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+

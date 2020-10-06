@@ -34,6 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Checkout\" />
+    <Folder Include="Views\CartController1\" />
     <Folder Include="wwwroot\AdminTemplate\" />
     <Folder Include="wwwroot\images\profile\" />
     <Folder Include="wwwroot\images\product\uploads\" />

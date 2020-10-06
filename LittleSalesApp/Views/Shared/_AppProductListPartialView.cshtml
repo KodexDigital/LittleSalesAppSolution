@@ -1,0 +1,39 @@
+﻿@model SystemApp.Models.ViewModels.HomeViewModel
+
+<div class="card-deck row no-gutters">
+	@if (Model.ProductList.Any())
+	{
+
+		@foreach (var item in Model.ProductList)
+		{
+			var productImagePath = "~/images/product/uploads/" + item.ProductImagePath;
+			<input type="hidden" asp-for="@item.Id" />
+			<div class="card" style="margin-left:10px; max-width:18em">
+				<div class="card-body">
+					<div class="card-title">
+						<span class="text-danger float-right"><strong>&#8358;@item.Price.ToString("#,###")</strong></span>
+					</div>
+					<img src="@productImagePath" asp-append-version="true" class="card-img-top img-fluid rounded" style="width:100%; height:100%" />
+				</div>
+				<div class="card-footer bg-white">
+					<h6 class="text-capitalize">@item.ProductName</h6>
+					<div class="row">
+						<div class="col-md-6">
+							<a asp-controller="Cart" asp-action="Buy" asp-route-prodcutId="@item.Id">Buy Now</a>
+							@*<a asp-action="AddToCart" asp-route-prodcutId="@item.Id" class="btn btn-danger form-control"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy</a>*@
+						</div>
+						<div class="col-md-6">
+							<a asp-action="ProductDetails" asp-route-productId="@item.Id" class="btn btn-info form-control"><i class="fa fa-eye" aria-hidden="true"></i> Details</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	}
+	else
+	{
+		<div>
+			<p>There are no records in our database yet</p>
+		</div>
+	}
+</div>

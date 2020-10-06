@@ -1,0 +1,8 @@
+﻿@model IList<SystemApp.Models.Carts.PaymentIcons>
+
+<div class="h3 mt-3">
+	@foreach (var icon in Model)
+	{
+		<i class="@icon.IconClass" title="@icon.IconName" style="color:@icon.IconBgColor"></i>
+	}
+</div> 
